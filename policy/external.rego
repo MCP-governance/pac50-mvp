@@ -2,11 +2,11 @@ package mcp.external
 
 # These rules validate evidence attestations, not the underlying real-world work.
 activation_ids := {
-    "PAC01", "PAC02", "PAC25", "PAC26", "PAC27", "PAC28",
-    "PAC29", "PAC30", "PAC31", "PAC32", "PAC33", "PAC34",
+    "PAC01", "PAC02", "PAC03", "PAC04", "PAC05", "PAC06",
+    "PAC07", "PAC13", "PAC14", "PAC15", "PAC16", "PAC17",
 }
-operation_ids := {"PAC22", "PAC40", "PAC42", "PAC43", "PAC44"}
-retirement_ids := {"PAC24", "PAC45", "PAC46", "PAC47", "PAC48", "PAC49"}
+operation_ids := {"PAC38", "PAC39", "PAC41", "PAC42", "PAC43"}
+retirement_ids := {"PAC45", "PAC46", "PAC47", "PAC48", "PAC49", "PAC50"}
 
 stage_ids := activation_ids if { input.phase == "activation" }
 stage_ids := operation_ids if { input.phase == "operation" }
@@ -19,7 +19,7 @@ base_valid if {
     is_string(input.request.server_id)
     input.request.server_id != ""
     is_object(input.facts.attestations)
-    input.facts.approval.baseline.policy_version == data.mcp.pac49.pack_version
+    input.facts.approval.baseline.policy_version == data.mcp.pac50.pack_version
 }
 
 attestation_valid(id) if {

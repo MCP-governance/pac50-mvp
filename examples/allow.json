@@ -7,6 +7,7 @@
     "agent_id": "agent-1",
     "session_id": "session-1",
     "server_id": "server-1",
+    "http_origin": "https://host.example.test",
     "feature_type": "tool",
     "feature_id": "read_file",
     "action": "READ",
@@ -40,13 +41,14 @@
         "server_version": "1.0.0",
         "feature_definition_hash": "sha256:feature-v1",
         "schema_hash": "sha256:schema-v1",
-        "policy_version": "pac49-v1"
+        "policy_version": "pac50-v1"
       },
       "environments": ["prod"],
       "production_controls": true,
       "subject": {"user_id": "user-1", "agent_id": "agent-1", "session_id": "session-1"},
       "auth_issuer": "https://auth.example.test",
       "connections": [{"server_id": "server-1", "endpoint_id": "endpoint-1", "final_target_id": "target-1"}],
+      "allowed_origins": ["https://host.example.test"],
       "features": [{"server_id": "server-1", "type": "tool", "id": "read_file", "definition_hash": "sha256:feature-v1"}],
       "actions": ["READ"],
       "allowed_argument_keys": ["path"],
@@ -68,7 +70,7 @@
       "server_version": "1.0.0",
       "feature_definition_hash": "sha256:feature-v1",
       "schema_hash": "sha256:schema-v1",
-      "policy_version": "pac49-v1"
+      "policy_version": "pac50-v1"
     },
     "environment": {
       "verified": true, "id": "prod", "production_equivalent": false,
@@ -116,6 +118,8 @@
     },
     "connection": {
       "verified": true,
+      "transport": "http",
+      "transport_verified": true,
       "final_target_verified": true,
       "server_id": "server-1",
       "endpoint_id": "endpoint-1",
@@ -125,6 +129,10 @@
       "oauth_discovery_checked": true,
       "destination_changed": false,
       "change_reapproved": false
+    },
+    "origin": {
+      "verified": true, "server_enforced": true, "allowed": true,
+      "server_id": "server-1", "origin": "https://host.example.test"
     },
     "catalog_feature": {
       "verified": true,

@@ -2,11 +2,11 @@ package mcp.decision
 
 findings contains finding if {
     input.phase == "request"
-    finding := data.mcp.pac49.request_findings[_]
+    finding := data.mcp.pac50.request_findings[_]
 }
 findings contains finding if {
     input.phase == "response"
-    finding := data.mcp.pac49.response_findings[_]
+    finding := data.mcp.pac50.response_findings[_]
 }
 findings contains finding if {
     input.phase in {"activation", "operation", "retirement"}

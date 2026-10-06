@@ -26,6 +26,9 @@
         "server_id": {
           "type": "string"
         },
+        "http_origin": {
+          "type": "string"
+        },
         "feature_type": {
           "type": "string"
         },
@@ -223,6 +226,12 @@
                   }
                 },
                 "additionalProperties": true
+              }
+            },
+            "allowed_origins": {
+              "type": "array",
+              "items": {
+                "type": "string"
               }
             },
             "features": {
@@ -587,6 +596,12 @@
             "verified": {
               "type": "boolean"
             },
+            "transport": {
+              "type": "string"
+            },
+            "transport_verified": {
+              "type": "boolean"
+            },
             "final_target_verified": {
               "type": "boolean"
             },
@@ -613,6 +628,27 @@
             },
             "change_reapproved": {
               "type": "boolean"
+            }
+          },
+          "additionalProperties": true
+        },
+        "origin": {
+          "type": "object",
+          "properties": {
+            "verified": {
+              "type": "boolean"
+            },
+            "server_enforced": {
+              "type": "boolean"
+            },
+            "allowed": {
+              "type": "boolean"
+            },
+            "server_id": {
+              "type": "string"
+            },
+            "origin": {
+              "type": "string"
             }
           },
           "additionalProperties": true
@@ -1089,7 +1125,7 @@
   },
   "additionalProperties": true,
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "MCP PAC49 decision input",
+  "title": "MCP PAC50 decision input",
   "required": [
     "phase",
     "request",

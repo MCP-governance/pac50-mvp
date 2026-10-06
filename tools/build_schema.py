@@ -27,7 +27,7 @@ def shape(value):
 base = json.loads((ROOT / "examples" / "allow.json").read_text())
 schema = shape(base)
 schema["$schema"] = "https://json-schema.org/draft/2020-12/schema"
-schema["title"] = "MCP PAC49 decision input"
+schema["title"] = "MCP PAC50 decision input"
 schema["required"] = ["phase", "request", "facts"]
 schema["properties"]["phase"] = {
     "enum": ["request", "response", "activation", "operation", "retirement"]

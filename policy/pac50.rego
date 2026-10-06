@@ -1,8 +1,8 @@
-package mcp.pac49
+package mcp.pac50
 
-# PAC IDs and meanings follow "정책 최종본의 사본" in the supplied 49-row workbook.
+# PAC IDs map to POL-01 through POL-50 in the master policy sheet.
 # Only facts assembled by a trusted Gateway/Host may reach this policy.
-pack_version := "pac49-v1"
+pack_version := "pac50-v1"
 
 within(now, start, end) if {
     is_number(now)
@@ -37,8 +37,8 @@ base_valid if {
     input.request.automated == input.facts.classification.automated
 }
 
-# PAC03: connection approval, conditions, validity and separate user consent.
-ok03 if {
+# PAC08: connection approval, conditions, validity and separate user consent.
+ok08 if {
     a := input.facts.approval
     a.status == "APPROVED"
     a.server_id == input.request.server_id
@@ -49,7 +49,7 @@ ok03 if {
     input.facts.user_consent.feature_id == input.request.feature_id
     input.facts.user_consent.asset_id == input.request.data.asset_id
 }
-ok03 if {
+ok08 if {
     a := input.facts.approval
     a.status == "CONDITIONAL_APPROVED"
     a.conditions_met == true
@@ -62,8 +62,8 @@ ok03 if {
     input.facts.user_consent.asset_id == input.request.data.asset_id
 }
 
-# PAC04: approved and separated environment; production data has added controls.
-ok04 if {
+# PAC09: approved and separated environment; production data has added controls.
+ok09 if {
     e := input.facts.environment
     e.verified == true
     e.id == input.request.environment
@@ -72,7 +72,7 @@ ok04 if {
     e.local_restrictions_verified == true
     e.production_data_used == false
 }
-ok04 if {
+ok09 if {
     e := input.facts.environment
     e.verified == true
     e.id == input.request.environment
@@ -86,8 +86,8 @@ ok04 if {
     e.deletion_plan == true
 }
 
-# PAC05 and PAC41: actual endpoint, DNS/redirect/OAuth discovery and changed destination.
-ok05 if {
+# PAC10 and PAC40: actual endpoint, DNS/redirect/OAuth discovery and changed destination.
+ok10 if {
     c := input.facts.connection
     c.verified == true
     c.final_target_verified == true
@@ -100,16 +100,16 @@ ok05 if {
     approved.endpoint_id == c.endpoint_id
     approved.final_target_id == c.final_target_id
 }
-ok41 if {
+ok40 if {
     input.facts.connection.destination_changed == false
 }
-ok41 if {
+ok40 if {
     input.facts.connection.destination_changed == true
     input.facts.connection.change_reapproved == true
 }
 
-# PAC06: server/type/feature/definition are one approval key.
-ok06 if {
+# PAC11: server/type/feature/definition are one approval key.
+ok11 if {
     f := input.facts.catalog_feature
     f.verified == true
     f.server_id == input.request.server_id
@@ -123,15 +123,32 @@ ok06 if {
     approved.definition_hash == f.definition_hash
 }
 
-# PAC07: the Host/Gateway proves this request passed the managed path.
-ok07 if {
+# PAC12: the Host/Gateway proves this request passed the managed path.
+ok12 if {
     input.facts.gateway.path_verified == true
     input.facts.gateway.direct_connection_blocked == true
     input.facts.gateway.local_execution_blocked == true
 }
 
-# PAC08: identity is verified independently of request text.
-ok08 if {
+# PAC18: an HTTP server checks the actual request origin against approved origins.
+ok18 if {
+    input.facts.connection.transport_verified == true
+    input.facts.connection.transport == "local"
+}
+ok18 if {
+    input.facts.connection.transport_verified == true
+    input.facts.connection.transport == "http"
+    o := input.facts.origin
+    o.verified == true
+    o.server_enforced == true
+    o.allowed == true
+    o.server_id == input.request.server_id
+    o.origin == input.request.http_origin
+    o.origin in input.facts.approval.allowed_origins
+}
+
+# PAC19: identity is verified independently of request text.
+ok19 if {
     i := input.facts.identity
     a := input.facts.approval.subject
     i.verified == true
@@ -143,9 +160,9 @@ ok08 if {
     input.request.session_id == i.session_id
 }
 
-# PAC09: delegated use stays within user, agent, purpose and grant.
-ok09 if { input.request.on_behalf_of == false }
-ok09 if {
+# PAC20: delegated use stays within user, agent, purpose and grant.
+ok20 if { input.request.on_behalf_of == false }
+ok20 if {
     input.request.on_behalf_of == true
     d := input.facts.delegation
     d.verified == true
@@ -160,12 +177,12 @@ ok09 if {
     input.request.feature_id in d.feature_ids
 }
 
-# PAC10: HTTP OAuth validation, including no token pass-through.
-ok10 if {
+# PAC21: HTTP OAuth validation, including no token pass-through.
+ok21 if {
     input.facts.auth.mode == "local"
     input.facts.auth.verified == true
 }
-ok10 if {
+ok21 if {
     t := input.facts.auth
     t.mode == "http"
     t.verified == true
@@ -177,16 +194,16 @@ ok10 if {
     input.request.action in t.scopes
 }
 
-# PAC11: a fresh evaluation is bound to this request.
-ok11 if {
+# PAC22: a fresh evaluation is bound to this request.
+ok22 if {
     v := input.facts.evaluation
     v.verified == true
     v.fresh == true
     v.request_id == input.request.id
 }
 
-# PAC12: action and subject rights are checked for this call.
-ok12 if {
+# PAC23: action and subject rights are checked for this call.
+ok23 if {
     input.facts.action.verified == true
     input.facts.action.normalized == input.request.action
     input.facts.action.kind == input.request.action
@@ -215,8 +232,8 @@ bound_targets(kind) := {value |
 }
 target_set(items) := {item | item := items[_]}
 
-# PAC13: canonical arguments, complete extraction, schema and target scope.
-ok13 if {
+# PAC24: canonical arguments, complete extraction, schema and target scope.
+ok24 if {
     p := input.facts.parameters
     p.verified == true
     p.normalized == true
@@ -242,8 +259,8 @@ ok13 if {
     subset(input.request.targets.objects, input.facts.approval.targets.objects)
 }
 
-# PAC14: asset/grade and all three access scopes.
-ok14 if {
+# PAC25: asset/grade and all three access scopes.
+ok25 if {
     d := input.facts.data
     d.verified == true
     d.asset_id == input.request.data.asset_id
@@ -265,14 +282,14 @@ ok14 if {
     feature_scope.grade == d.grade
 }
 
-# PAC15: transfer destination, purpose, consent and applicable legal review.
-ok15 if { input.request.transfer.enabled == false }
+# PAC26: transfer destination, purpose, consent and applicable legal review.
+ok26 if { input.request.transfer.enabled == false }
 transfer_legal_ok if { input.facts.transfer.personal_data == false }
 transfer_legal_ok if {
     input.facts.transfer.personal_data == true
     input.facts.transfer.legal_review_passed == true
 }
-ok15 if {
+ok26 if {
     input.request.transfer.enabled == true
     x := input.facts.transfer
     x.verified == true
@@ -318,8 +335,8 @@ approval_binding := {
 }
 request_digest := crypto.sha256(json.marshal(approval_binding))
 approval_missing if { object.get(input.facts, "individual_approval", null) == null }
-ok16 if { input.request.high_risk == false }
-ok16 if {
+ok27 if { input.request.high_risk == false }
+ok27 if {
     input.request.high_risk == true
     a := input.facts.individual_approval
     a.verified == true
@@ -336,8 +353,8 @@ approval_needed if {
     input.facts.approval_workflow_available == true
 }
 
-# PAC17: rate, concurrency and time limits; reservation is Gateway-owned.
-ok17 if {
+# PAC28: rate, concurrency and time limits; reservation is Gateway-owned.
+ok28 if {
     s := input.facts.execution
     l := input.facts.approval.limits
     s.atomic_reservation_verified == true
@@ -349,20 +366,20 @@ ok17 if {
     s.requested_timeout_ms <= l.max_execution_ms
 }
 
-# PAC18/19: Host/Gateway must validate external authority and input filtering.
-ok18 if {
+# PAC29/PAC30: Host/Gateway must validate external authority and input filtering.
+ok29 if {
     input.facts.authority.verified == true
     input.facts.authority.external_content_used_as_grant == false
 }
-ok19 if {
+ok30 if {
     input.facts.input_filter.verified == true
     input.facts.input_filter.minimum_necessary == true
     input.facts.input_filter.prohibited_data_removed == true
     input.facts.input_filter.auth_separated == true
 }
 
-# PAC21: actual version/definition/schema/policy match approved baseline.
-ok21 if {
+# PAC37: actual version/definition/schema/policy match approved baseline.
+ok37 if {
     b := input.facts.baseline
     a := input.facts.approval.baseline
     b.verified == true
@@ -372,8 +389,8 @@ ok21 if {
     b.policy_version == a.policy_version
 }
 
-# PAC23: current suspension/revocation must be clear.
-ok23 if {
+# PAC44: current suspension/revocation must be clear.
+ok44 if {
     r := input.facts.revocation
     r.verified == true
     r.fresh == true
@@ -384,9 +401,9 @@ ok23 if {
     r.approval == false
 }
 
-# PAC36/37: cross-server and cross-task data reuse require explicit scope.
-ok36 if { input.request.cross_server_transfer == false }
-ok36 if {
+# PAC33/PAC34: cross-server and cross-task data reuse require explicit scope.
+ok33 if { input.request.cross_server_transfer == false }
+ok33 if {
     input.request.cross_server_transfer == true
     input.facts.cross_server.verified == true
     input.facts.cross_server.source_server_id != input.request.server_id
@@ -394,58 +411,59 @@ ok36 if {
     input.facts.cross_server.asset_id == input.request.data.asset_id
     input.facts.cross_server.approved == true
 }
-ok37 if {
+ok34 if {
     input.facts.context.verified == true
     input.facts.context.isolated == true
     input.facts.context.previous_task_reused == false
 }
-ok37 if {
+ok34 if {
     input.facts.context.verified == true
     input.facts.context.previous_task_reused == true
     input.facts.context.reuse_authorized == true
 }
 
-# PAC38: scope/volume on one document retrieval.
-ok38 if { input.facts.action.kind != "READ" }
-ok38 if {
+# PAC35: scope/volume on one document retrieval.
+ok35 if { input.facts.action.kind != "READ" }
+ok35 if {
     input.facts.action.kind == "READ"
     input.facts.query_scope.verified == true
     input.facts.query_scope.within_limit == true
 }
 
-# PAC39: a repeated mutation must never be forwarded as a fresh call.
-ok39 if { not input.facts.action.kind in {"CREATE", "UPDATE", "DELETE"} }
-ok39 if {
+# PAC36: a repeated mutation must never be forwarded as a fresh call.
+ok36 if { not input.facts.action.kind in {"CREATE", "UPDATE", "DELETE"} }
+ok36 if {
     input.facts.action.kind in {"CREATE", "UPDATE", "DELETE"}
     input.facts.execution.idempotency_verified == true
     input.facts.execution.duplicate_status == "clear"
     input.facts.execution.previous_mutation_status == "clear"
 }
 
-deny contains "PAC03" if { not ok03 }
-deny contains "PAC04" if { not ok04 }
-deny contains "PAC05" if { not ok05 }
-deny contains "PAC06" if { not ok06 }
-deny contains "PAC07" if { not ok07 }
 deny contains "PAC08" if { not ok08 }
 deny contains "PAC09" if { not ok09 }
 deny contains "PAC10" if { not ok10 }
 deny contains "PAC11" if { not ok11 }
 deny contains "PAC12" if { not ok12 }
-deny contains "PAC13" if { not ok13 }
-deny contains "PAC14" if { not ok14 }
-deny contains "PAC15" if { not ok15 }
-deny contains "PAC16" if { not ok16; not approval_needed }
-deny contains "PAC17" if { not ok17 }
 deny contains "PAC18" if { not ok18 }
 deny contains "PAC19" if { not ok19 }
+deny contains "PAC20" if { not ok20 }
 deny contains "PAC21" if { not ok21 }
+deny contains "PAC22" if { not ok22 }
 deny contains "PAC23" if { not ok23 }
-deny contains "PAC36" if { not ok36 }
+deny contains "PAC24" if { not ok24 }
+deny contains "PAC25" if { not ok25 }
+deny contains "PAC26" if { not ok26 }
+deny contains "PAC27" if { not ok27; not approval_needed }
+deny contains "PAC28" if { not ok28 }
+deny contains "PAC29" if { not ok29 }
+deny contains "PAC30" if { not ok30 }
 deny contains "PAC37" if { not ok37 }
-deny contains "PAC38" if { not ok38 }
-deny contains "PAC39" if { not ok39 }
-deny contains "PAC41" if { not ok41 }
+deny contains "PAC44" if { not ok44 }
+deny contains "PAC33" if { not ok33 }
+deny contains "PAC34" if { not ok34 }
+deny contains "PAC35" if { not ok35 }
+deny contains "PAC36" if { not ok36 }
+deny contains "PAC40" if { not ok40 }
 
 request_findings contains {"policy_id": "INPUT_CONTRACT", "effect": "DENY"} if {
     not base_valid
@@ -458,7 +476,7 @@ request_findings contains {"policy_id": id, "effect": "DENY"} if {
     base_valid
     id := deny[_]
 }
-request_findings contains {"policy_id": "PAC16", "effect": "APPROVAL"} if {
+request_findings contains {"policy_id": "PAC27", "effect": "APPROVAL"} if {
     base_valid
     approval_needed
 }
@@ -472,13 +490,13 @@ response_valid if {
     input.facts.response.request_id == input.request.id
     input.facts.response.verified == true
 }
-ok20 if {
+ok31 if {
     input.facts.response.sensitive_content_checked == true
     input.facts.response.prohibited_data_removed == true
     input.facts.response.access_scope_checked == true
 }
-ok35 if { input.facts.response.important_document_use == false }
-ok35 if {
+ok32 if { input.facts.response.important_document_use == false }
+ok32 if {
     input.facts.response.important_document_use == true
     input.facts.response.source_verified == true
     input.facts.response.original_document_matched == true
@@ -490,11 +508,11 @@ response_findings contains {"policy_id": "POLICY_BUNDLE", "effect": "DENY"} if {
     response_valid
     input.facts.approval.baseline.policy_version != pack_version
 }
-response_findings contains {"policy_id": "PAC20", "effect": "DENY"} if {
+response_findings contains {"policy_id": "PAC31", "effect": "DENY"} if {
     response_valid
-    not ok20
+    not ok31
 }
-response_findings contains {"policy_id": "PAC35", "effect": "DENY"} if {
+response_findings contains {"policy_id": "PAC32", "effect": "DENY"} if {
     response_valid
-    not ok35
+    not ok32
 }

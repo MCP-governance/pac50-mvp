@@ -1,4 +1,4 @@
-"""Exercise every Rego control and verify the 49-row catalog boundary."""
+"""Exercise every Rego control and verify the 50-row catalog boundary."""
 
 import copy
 import json
@@ -62,95 +62,102 @@ def expect(name, changes, effect, ids=(), phase="request"):
 
 def main():
     controls = CATALOG["controls"]
-    ids = [f"PAC{i:02d}" for i in range(1, 50)]
+    ids = [f"PAC{i:02d}" for i in range(1, 51)]
     assert [c["id"] for c in controls] == ids
+    assert [c["source_id"] for c in controls] == [f"POL-{i:02d}" for i in range(1, 51)]
+    assert CATALOG["catalog_version"] == "pac50-v1"
     assert all(c["policy"] and c["name"] and c["area"] for c in controls)
-    assert sum(c["evaluation"] == "request" for c in controls) == 24
+    assert sum(c["evaluation"] == "request" for c in controls) == 25
     assert sum(c["evaluation"] == "response" for c in controls) == 2
     assert sum(c["evaluation"] == "external" for c in controls) == 23
-    print("PASS catalog: 49 source rows, 24 request, 2 response, 23 external")
+    print("PASS catalog: 50 source rows, 25 request, 2 response, 23 external")
 
     cases = [
         ("normal request", {}, "ALLOW", ()),
-        ("PAC03 consent", {"facts.user_consent.allowed": False}, "DENY", ("PAC03",)),
-        ("PAC03 consent for another Tool", {
+        ("PAC08 consent", {"facts.user_consent.allowed": False}, "DENY", ("PAC08",)),
+        ("PAC08 consent for another Tool", {
             "facts.user_consent.feature_id": "other"
-        }, "DENY", ("PAC03",)),
-        ("PAC04 environment separation", {"facts.environment.access_separated": False}, "DENY", ("PAC04",)),
-        ("PAC05 DNS", {"facts.connection.dns_checked": False}, "DENY", ("PAC05",)),
-        ("PAC06 unknown Tool", {"facts.catalog_feature.id": "other"}, "DENY", ("PAC06",)),
-        ("PAC07 Gateway path", {"facts.gateway.path_verified": False}, "DENY", ("PAC07",)),
-        ("PAC08 subject", {"facts.identity.session_id": "other"}, "DENY", ("PAC08",)),
-        ("PAC09 delegation purpose", {"facts.delegation.purpose_id": "other"}, "DENY", ("PAC09",)),
-        ("PAC10 token forwarding", {"facts.auth.not_forwarded": False}, "DENY", ("PAC10",)),
-        ("PAC11 stale evaluation", {"facts.evaluation.fresh": False}, "DENY", ("PAC11",)),
-        ("PAC12 action rights", {"facts.identity.allowed_actions": []}, "DENY", ("PAC12",)),
-        ("PAC13 invalid input", {"facts.parameters.schema_valid": False}, "DENY", ("PAC13",)),
-        ("PAC14 asset rights", {"facts.identity.allowed_assets": []}, "DENY", ("PAC14",)),
-        ("PAC14 crossed grade", {
+        }, "DENY", ("PAC08",)),
+        ("PAC09 environment separation", {"facts.environment.access_separated": False}, "DENY", ("PAC09",)),
+        ("PAC10 DNS", {"facts.connection.dns_checked": False}, "DENY", ("PAC10",)),
+        ("PAC11 unknown Tool", {"facts.catalog_feature.id": "other"}, "DENY", ("PAC11",)),
+        ("PAC12 Gateway path", {"facts.gateway.path_verified": False}, "DENY", ("PAC12",)),
+        ("PAC18 rejected HTTP origin", {"facts.origin.allowed": False}, "DENY", ("PAC18",)),
+        ("PAC18 unverified transport", {"facts.connection.transport_verified": False}, "DENY", ("PAC18",)),
+        ("PAC18 missing server enforcement", {"facts.origin.server_enforced": False}, "DENY", ("PAC18",)),
+        ("PAC18 unapproved origin", {"request.http_origin": "https://unapproved.example.test", "facts.origin.origin": "https://unapproved.example.test"}, "DENY", ("PAC18",)),
+        ("PAC18 verified local transport", {"facts.connection.transport": "local", "facts.auth.mode": "local", "facts.origin.allowed": False}, "ALLOW", ()),
+        ("PAC19 subject", {"facts.identity.session_id": "other"}, "DENY", ("PAC19",)),
+        ("PAC20 delegation purpose", {"facts.delegation.purpose_id": "other"}, "DENY", ("PAC20",)),
+        ("PAC21 token forwarding", {"facts.auth.not_forwarded": False}, "DENY", ("PAC21",)),
+        ("PAC22 stale evaluation", {"facts.evaluation.fresh": False}, "DENY", ("PAC22",)),
+        ("PAC23 action rights", {"facts.identity.allowed_actions": []}, "DENY", ("PAC23",)),
+        ("PAC24 invalid input", {"facts.parameters.schema_valid": False}, "DENY", ("PAC24",)),
+        ("PAC25 asset rights", {"facts.identity.allowed_assets": []}, "DENY", ("PAC25",)),
+        ("PAC25 crossed grade", {
             "facts.identity.allowed_data_scopes": [
                 {"asset_id": "asset-1", "grade": "secret"}
             ]
-        }, "DENY", ("PAC14",)),
-        ("PAC15 unreviewed transfer", {
+        }, "DENY", ("PAC25",)),
+        ("PAC26 unreviewed transfer", {
             "request.transfer.enabled": True,
             "facts.classification.transfer_required": True,
             "request.transfer.destination_id": "dest-1",
             "facts.transfer.personal_data": True,
             "facts.transfer.legal_review_passed": False,
-        }, "DENY", ("PAC15",)),
-        ("PAC15 approved nonpersonal transfer", {
+        }, "DENY", ("PAC26",)),
+        ("PAC26 approved nonpersonal transfer", {
             "request.transfer.enabled": True,
             "facts.classification.transfer_required": True,
             "request.transfer.destination_id": "dest-1",
             "facts.transfer.personal_data": False,
             "facts.transfer.legal_review_passed": False,
         }, "ALLOW", ()),
-        ("PAC16 approval pending", {
+        ("PAC27 approval pending", {
             "request.high_risk": True,
             "facts.classification.high_risk": True,
-        }, "APPROVAL", ("PAC16",)),
-        ("PAC17 rate exceeded", {"facts.execution.rate_within_limit": False}, "DENY", ("PAC17",)),
-        ("PAC18 external text used as grant", {
+        }, "APPROVAL", ("PAC27",)),
+        ("PAC28 rate exceeded", {"facts.execution.rate_within_limit": False}, "DENY", ("PAC28",)),
+        ("PAC29 external text used as grant", {
             "facts.authority.external_content_used_as_grant": True
-        }, "DENY", ("PAC18",)),
-        ("PAC19 prohibited input", {
+        }, "DENY", ("PAC29",)),
+        ("PAC30 prohibited input", {
             "facts.input_filter.prohibited_data_removed": False
-        }, "DENY", ("PAC19",)),
-        ("PAC21 changed schema", {
+        }, "DENY", ("PAC30",)),
+        ("PAC37 changed schema", {
             "facts.baseline.schema_hash": "sha256:changed"
-        }, "DENY", ("PAC21",)),
-        ("PAC23 revoked", {"facts.revocation.server": True}, "DENY", ("PAC23",)),
-        ("PAC36 cross-server transfer", {
+        }, "DENY", ("PAC37",)),
+        ("PAC44 revoked", {"facts.revocation.server": True}, "DENY", ("PAC44",)),
+        ("PAC33 cross-server transfer", {
             "request.cross_server_transfer": True,
             "facts.cross_server.approved": False,
-        }, "DENY", ("PAC36",)),
-        ("PAC37 context leak", {"facts.context.isolated": False}, "DENY", ("PAC37",)),
-        ("PAC38 bulk retrieval", {"facts.query_scope.within_limit": False}, "DENY", ("PAC38",)),
-        ("PAC41 changed endpoint", {
+        }, "DENY", ("PAC33",)),
+        ("PAC34 context leak", {"facts.context.isolated": False}, "DENY", ("PAC34",)),
+        ("PAC35 bulk retrieval", {"facts.query_scope.within_limit": False}, "DENY", ("PAC35",)),
+        ("PAC40 changed endpoint", {
             "facts.connection.destination_changed": True,
             "facts.connection.change_reapproved": False,
-        }, "DENY", ("PAC41",)),
+        }, "DENY", ("PAC40",)),
         ("unknown input source", {"facts.trusted": False}, "DENY", ("INPUT_CONTRACT",)),
         ("wrong policy version", {
             "facts.approval.baseline.policy_version": "pac15-v1"
-        }, "DENY", ("PAC21", "POLICY_BUNDLE")),
+        }, "DENY", ("PAC37", "POLICY_BUNDLE")),
         ("unknown phase", {}, "DENY", ("INPUT_CONTRACT",), "other"),
         ("normal response", {}, "ALLOW", (), "response"),
-        ("PAC20 sensitive output", {
+        ("PAC31 sensitive output", {
             "facts.response.prohibited_data_removed": False
-        }, "DENY", ("PAC20",), "response"),
-        ("PAC35 changed document", {
+        }, "DENY", ("PAC31",), "response"),
+        ("PAC32 changed document", {
             "facts.response.important_document_use": True,
             "facts.response.source_verified": False,
-        }, "DENY", ("PAC35",), "response"),
+        }, "DENY", ("PAC32",), "response"),
     ]
     results = [expect(*case) for case in cases]
 
     high_risk = copy.deepcopy(BASE)
     high_risk["request"]["high_risk"] = True
     high_risk["facts"]["classification"]["high_risk"] = True
-    digest = query(high_risk, "data.mcp.pac49.request_digest")
+    digest = query(high_risk, "data.mcp.pac50.request_digest")
     approval = {
         "verified": True, "approver_authorized": True,
         "single_use_reserved": True, "status": "APPROVED",
@@ -158,24 +165,24 @@ def main():
         "valid_from_ns": 1700000000000000000,
         "valid_until_ns": 1900000000000000000,
     }
-    results.append(expect("PAC16 bound approval", {
+    results.append(expect("PAC27 bound approval", {
         "request.high_risk": True,
         "facts.classification.high_risk": True,
         "facts.individual_approval": approval,
     }, "ALLOW"))
-    results.append(expect("PAC16 reused approval", {
+    results.append(expect("PAC27 reused approval", {
         "request.high_risk": True,
         "facts.classification.high_risk": True,
         "facts.individual_approval": dict(approval, single_use_reserved=False),
-    }, "DENY", ("PAC16",)))
-    results.append(expect("PAC16 changed request", {
+    }, "DENY", ("PAC27",)))
+    results.append(expect("PAC27 changed request", {
         "request.high_risk": True,
         "facts.classification.high_risk": True,
         "request.purpose_id": "other",
         "facts.delegation.purpose_id": "other",
         "facts.individual_approval": approval,
-    }, "DENY", ("PAC16",)))
-    results.append(expect("PAC39 repeated mutation", {
+    }, "DENY", ("PAC27",)))
+    results.append(expect("PAC36 repeated mutation", {
         "request.action": "UPDATE",
         "facts.action.normalized": "UPDATE",
         "facts.action.kind": "UPDATE",
@@ -187,14 +194,14 @@ def main():
         "facts.delegation.delegated_actions": ["READ", "UPDATE"],
         "facts.auth.scopes": ["READ", "UPDATE"],
         "facts.execution.duplicate_status": "duplicate",
-    }, "DENY", ("PAC39",)))
-    results.append(expect("PAC15 consent for another destination", {
+    }, "DENY", ("PAC36",)))
+    results.append(expect("PAC26 consent for another destination", {
         "request.transfer.enabled": True,
         "facts.classification.transfer_required": True,
         "request.transfer.destination_id": "dest-1",
         "facts.transfer.consent_destination_id": "dest-2",
-    }, "DENY", ("PAC15",)))
-    results.append(expect("PAC39 ambiguous prior mutation", {
+    }, "DENY", ("PAC26",)))
+    results.append(expect("PAC36 ambiguous prior mutation", {
         "request.action": "UPDATE",
         "facts.action.normalized": "UPDATE",
         "facts.action.kind": "UPDATE",
@@ -206,7 +213,7 @@ def main():
         "facts.delegation.delegated_actions": ["READ", "UPDATE"],
         "facts.auth.scopes": ["READ", "UPDATE"],
         "facts.execution.previous_mutation_status": "unknown",
-    }, "DENY", ("PAC39",)))
+    }, "DENY", ("PAC36",)))
 
     for phase in ("activation", "operation", "retirement"):
         stage_ids = sorted(
