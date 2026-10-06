@@ -1,0 +1,1098 @@
+{
+  "type": "object",
+  "properties": {
+    "request": {
+      "type": "object",
+      "properties": {
+        "purpose_id": {
+          "type": "string"
+        },
+        "cross_server_transfer": {
+          "type": "boolean"
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "user_id": {
+          "type": "string"
+        },
+        "agent_id": {
+          "type": "string"
+        },
+        "session_id": {
+          "type": "string"
+        },
+        "server_id": {
+          "type": "string"
+        },
+        "feature_type": {
+          "type": "string"
+        },
+        "feature_id": {
+          "type": "string"
+        },
+        "action": {
+          "type": "string"
+        },
+        "arguments": {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": true
+        },
+        "on_behalf_of": {
+          "type": "boolean"
+        },
+        "environment": {
+          "type": "string"
+        },
+        "targets": {
+          "type": "object",
+          "properties": {
+            "files": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "commands": {
+              "type": "array",
+              "items": {}
+            },
+            "recipients": {
+              "type": "array",
+              "items": {}
+            },
+            "urls": {
+              "type": "array",
+              "items": {}
+            },
+            "objects": {
+              "type": "array",
+              "items": {}
+            }
+          },
+          "additionalProperties": true
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "asset_id": {
+              "type": "string"
+            },
+            "grade": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": true
+        },
+        "transfer": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "destination_id": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": true
+        },
+        "high_risk": {
+          "type": "boolean"
+        },
+        "automated": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": true
+    },
+    "facts": {
+      "type": "object",
+      "properties": {
+        "trusted": {
+          "type": "boolean"
+        },
+        "now_ns": {
+          "type": "integer"
+        },
+        "classification": {
+          "type": "object",
+          "properties": {
+            "verified": {
+              "type": "boolean"
+            },
+            "high_risk": {
+              "type": "boolean"
+            },
+            "transfer_required": {
+              "type": "boolean"
+            },
+            "on_behalf_of": {
+              "type": "boolean"
+            },
+            "automated": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": true
+        },
+        "approval_workflow_available": {
+          "type": "boolean"
+        },
+        "approval": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string"
+            },
+            "server_id": {
+              "type": "string"
+            },
+            "conditions_met": {
+              "type": "boolean"
+            },
+            "valid_from_ns": {
+              "type": "integer"
+            },
+            "valid_until_ns": {
+              "type": "integer"
+            },
+            "baseline": {
+              "type": "object",
+              "properties": {
+                "server_version": {
+                  "type": "string"
+                },
+                "feature_definition_hash": {
+                  "type": "string"
+                },
+                "schema_hash": {
+                  "type": "string"
+                },
+                "policy_version": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": true
+            },
+            "environments": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "production_controls": {
+              "type": "boolean"
+            },
+            "subject": {
+              "type": "object",
+              "properties": {
+                "user_id": {
+                  "type": "string"
+                },
+                "agent_id": {
+                  "type": "string"
+                },
+                "session_id": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": true
+            },
+            "auth_issuer": {
+              "type": "string"
+            },
+            "connections": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "server_id": {
+                    "type": "string"
+                  },
+                  "endpoint_id": {
+                    "type": "string"
+                  },
+                  "final_target_id": {
+                    "type": "string"
+                  }
+                },
+                "additionalProperties": true
+              }
+            },
+            "features": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "server_id": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string"
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "definition_hash": {
+                    "type": "string"
+                  }
+                },
+                "additionalProperties": true
+              }
+            },
+            "actions": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "allowed_argument_keys": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "parameter_bindings": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "argument_path": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "target_type": {
+                    "type": "string"
+                  },
+                  "allowed_values": {
+                    "type": "array",
+                    "items": {}
+                  }
+                },
+                "additionalProperties": true
+              }
+            },
+            "targets": {
+              "type": "object",
+              "properties": {
+                "files": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "commands": {
+                  "type": "array",
+                  "items": {}
+                },
+                "recipients": {
+                  "type": "array",
+                  "items": {}
+                },
+                "urls": {
+                  "type": "array",
+                  "items": {}
+                },
+                "objects": {
+                  "type": "array",
+                  "items": {}
+                }
+              },
+              "additionalProperties": true
+            },
+            "data_scopes": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "asset_id": {
+                    "type": "string"
+                  },
+                  "grade": {
+                    "type": "string"
+                  }
+                },
+                "additionalProperties": true
+              }
+            },
+            "transfer_pairs": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "destination_id": {
+                    "type": "string"
+                  },
+                  "grade": {
+                    "type": "string"
+                  },
+                  "purpose_id": {
+                    "type": "string"
+                  }
+                },
+                "additionalProperties": true
+              }
+            },
+            "limits": {
+              "type": "object",
+              "properties": {
+                "allow_automated": {
+                  "type": "boolean"
+                },
+                "max_retries": {
+                  "type": "integer"
+                },
+                "max_concurrency": {
+                  "type": "integer"
+                },
+                "max_calls": {
+                  "type": "integer"
+                },
+                "max_chain_depth": {
+                  "type": "integer"
+                },
+                "max_execution_ms": {
+                  "type": "integer"
+                }
+              },
+              "additionalProperties": true
+            }
+          },
+          "additionalProperties": true
+        },
+        "baseline": {
+          "type": "object",
+          "properties": {
+            "verified": {
+              "type": "boolean"
+            },
+            "server_version": {
+              "type": "string"
+            },
+            "feature_definition_hash": {
+              "type": "string"
+            },
+            "schema_hash": {
+              "type": "string"
+            },
+            "policy_version": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": true
+        },
+        "environment": {
+          "type": "object",
+          "properties": {
+            "verified": {
+              "type": "boolean"
+            },
+            "id": {
+              "type": "string"
+            },
+            "production_equivalent": {
+              "type": "boolean"
+            },
+            "access_separated": {
+              "type": "boolean"
+            },
+            "local_restrictions_verified": {
+              "type": "boolean"
+            },
+            "production_data_used": {
+              "type": "boolean"
+            },
+            "responsible_approval": {
+              "type": "boolean"
+            },
+            "production_controls": {
+              "type": "boolean"
+            },
+            "monitoring": {
+              "type": "boolean"
+            },
+            "deletion_plan": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": true
+        },
+        "identity": {
+          "type": "object",
+          "properties": {
+            "verified": {
+              "type": "boolean"
+            },
+            "user_id": {
+              "type": "string"
+            },
+            "agent_id": {
+              "type": "string"
+            },
+            "session_id": {
+              "type": "string"
+            },
+            "allowed_actions": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "allowed_assets": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "allowed_data_scopes": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "asset_id": {
+                    "type": "string"
+                  },
+                  "grade": {
+                    "type": "string"
+                  }
+                },
+                "additionalProperties": true
+              }
+            }
+          },
+          "additionalProperties": true
+        },
+        "delegation": {
+          "type": "object",
+          "properties": {
+            "verified": {
+              "type": "boolean"
+            },
+            "user_id": {
+              "type": "string"
+            },
+            "agent_id": {
+              "type": "string"
+            },
+            "valid_from_ns": {
+              "type": "integer"
+            },
+            "valid_until_ns": {
+              "type": "integer"
+            },
+            "user_actions": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "agent_actions": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "delegated_actions": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "purpose_id": {
+              "type": "string"
+            },
+            "server_ids": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "feature_ids": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "allowed_assets": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "allowed_data_scopes": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "asset_id": {
+                    "type": "string"
+                  },
+                  "grade": {
+                    "type": "string"
+                  }
+                },
+                "additionalProperties": true
+              }
+            }
+          },
+          "additionalProperties": true
+        },
+        "auth": {
+          "type": "object",
+          "properties": {
+            "mode": {
+              "type": "string"
+            },
+            "verified": {
+              "type": "boolean"
+            },
+            "not_revoked": {
+              "type": "boolean"
+            },
+            "issuer": {
+              "type": "string"
+            },
+            "audience": {
+              "type": "string"
+            },
+            "valid_from_ns": {
+              "type": "integer"
+            },
+            "valid_until_ns": {
+              "type": "integer"
+            },
+            "scopes": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "not_forwarded": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": true
+        },
+        "connection": {
+          "type": "object",
+          "properties": {
+            "verified": {
+              "type": "boolean"
+            },
+            "final_target_verified": {
+              "type": "boolean"
+            },
+            "server_id": {
+              "type": "string"
+            },
+            "endpoint_id": {
+              "type": "string"
+            },
+            "final_target_id": {
+              "type": "string"
+            },
+            "dns_checked": {
+              "type": "boolean"
+            },
+            "redirect_checked": {
+              "type": "boolean"
+            },
+            "oauth_discovery_checked": {
+              "type": "boolean"
+            },
+            "destination_changed": {
+              "type": "boolean"
+            },
+            "change_reapproved": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": true
+        },
+        "catalog_feature": {
+          "type": "object",
+          "properties": {
+            "verified": {
+              "type": "boolean"
+            },
+            "server_id": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string"
+            },
+            "id": {
+              "type": "string"
+            },
+            "definition_hash": {
+              "type": "string"
+            },
+            "allowed_actions": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "allowed_assets": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "allowed_data_scopes": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "asset_id": {
+                    "type": "string"
+                  },
+                  "grade": {
+                    "type": "string"
+                  }
+                },
+                "additionalProperties": true
+              }
+            }
+          },
+          "additionalProperties": true
+        },
+        "action": {
+          "type": "object",
+          "properties": {
+            "verified": {
+              "type": "boolean"
+            },
+            "normalized": {
+              "type": "string"
+            },
+            "kind": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": true
+        },
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "verified": {
+              "type": "boolean"
+            },
+            "normalized": {
+              "type": "boolean"
+            },
+            "schema_valid": {
+              "type": "boolean"
+            },
+            "coverage_complete": {
+              "type": "boolean"
+            },
+            "canonical_arguments": {
+              "type": "object",
+              "properties": {
+                "path": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": true
+            },
+            "derived_targets": {
+              "type": "object",
+              "properties": {
+                "files": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "commands": {
+                  "type": "array",
+                  "items": {}
+                },
+                "recipients": {
+                  "type": "array",
+                  "items": {}
+                },
+                "urls": {
+                  "type": "array",
+                  "items": {}
+                },
+                "objects": {
+                  "type": "array",
+                  "items": {}
+                }
+              },
+              "additionalProperties": true
+            }
+          },
+          "additionalProperties": true
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "verified": {
+              "type": "boolean"
+            },
+            "asset_id": {
+              "type": "string"
+            },
+            "grade": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": true
+        },
+        "transfer": {
+          "type": "object",
+          "properties": {
+            "verified": {
+              "type": "boolean"
+            },
+            "final_destination_verified": {
+              "type": "boolean"
+            },
+            "final_destination_id": {
+              "type": "string"
+            },
+            "data_grade": {
+              "type": "string"
+            },
+            "purpose_id": {
+              "type": "string"
+            },
+            "user_consent_verified": {
+              "type": "boolean"
+            },
+            "consent_destination_id": {
+              "type": "string"
+            },
+            "consent_data_grade": {
+              "type": "string"
+            },
+            "personal_data": {
+              "type": "boolean"
+            },
+            "legal_review_passed": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": true
+        },
+        "revocation": {
+          "type": "object",
+          "properties": {
+            "verified": {
+              "type": "boolean"
+            },
+            "fresh": {
+              "type": "boolean"
+            },
+            "user": {
+              "type": "boolean"
+            },
+            "agent": {
+              "type": "boolean"
+            },
+            "server": {
+              "type": "boolean"
+            },
+            "feature": {
+              "type": "boolean"
+            },
+            "approval": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": true
+        },
+        "execution": {
+          "type": "object",
+          "properties": {
+            "atomic_reservation_verified": {
+              "type": "boolean"
+            },
+            "reservation_request_id": {
+              "type": "string"
+            },
+            "reservation_expires_ns": {
+              "type": "integer"
+            },
+            "duplicate_status": {
+              "type": "string"
+            },
+            "previous_mutation_status": {
+              "type": "string"
+            },
+            "retry_count": {
+              "type": "integer"
+            },
+            "active_concurrency": {
+              "type": "integer"
+            },
+            "total_calls": {
+              "type": "integer"
+            },
+            "chain_depth": {
+              "type": "integer"
+            },
+            "requested_timeout_ms": {
+              "type": "integer"
+            },
+            "rate_within_limit": {
+              "type": "boolean"
+            },
+            "idempotency_verified": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": true
+        },
+        "user_consent": {
+          "type": "object",
+          "properties": {
+            "verified": {
+              "type": "boolean"
+            },
+            "allowed": {
+              "type": "boolean"
+            },
+            "server_id": {
+              "type": "string"
+            },
+            "feature_id": {
+              "type": "string"
+            },
+            "asset_id": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": true
+        },
+        "gateway": {
+          "type": "object",
+          "properties": {
+            "path_verified": {
+              "type": "boolean"
+            },
+            "direct_connection_blocked": {
+              "type": "boolean"
+            },
+            "local_execution_blocked": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": true
+        },
+        "evaluation": {
+          "type": "object",
+          "properties": {
+            "verified": {
+              "type": "boolean"
+            },
+            "fresh": {
+              "type": "boolean"
+            },
+            "request_id": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": true
+        },
+        "authority": {
+          "type": "object",
+          "properties": {
+            "verified": {
+              "type": "boolean"
+            },
+            "external_content_used_as_grant": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": true
+        },
+        "input_filter": {
+          "type": "object",
+          "properties": {
+            "verified": {
+              "type": "boolean"
+            },
+            "minimum_necessary": {
+              "type": "boolean"
+            },
+            "prohibited_data_removed": {
+              "type": "boolean"
+            },
+            "auth_separated": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": true
+        },
+        "context": {
+          "type": "object",
+          "properties": {
+            "verified": {
+              "type": "boolean"
+            },
+            "isolated": {
+              "type": "boolean"
+            },
+            "previous_task_reused": {
+              "type": "boolean"
+            },
+            "reuse_authorized": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": true
+        },
+        "query_scope": {
+          "type": "object",
+          "properties": {
+            "verified": {
+              "type": "boolean"
+            },
+            "within_limit": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": true
+        },
+        "cross_server": {
+          "type": "object",
+          "properties": {
+            "verified": {
+              "type": "boolean"
+            },
+            "source_server_id": {
+              "type": "string"
+            },
+            "destination_server_id": {
+              "type": "string"
+            },
+            "asset_id": {
+              "type": "string"
+            },
+            "approved": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": true
+        },
+        "response": {
+          "type": "object",
+          "properties": {
+            "request_id": {
+              "type": "string"
+            },
+            "verified": {
+              "type": "boolean"
+            },
+            "sensitive_content_checked": {
+              "type": "boolean"
+            },
+            "prohibited_data_removed": {
+              "type": "boolean"
+            },
+            "access_scope_checked": {
+              "type": "boolean"
+            },
+            "important_document_use": {
+              "type": "boolean"
+            },
+            "source_verified": {
+              "type": "boolean"
+            },
+            "original_document_matched": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": true
+        },
+        "individual_approval": {
+          "type": "object",
+          "properties": {
+            "verified": {
+              "type": "boolean"
+            },
+            "approver_authorized": {
+              "type": "boolean"
+            },
+            "single_use_reserved": {
+              "type": "boolean"
+            },
+            "status": {
+              "type": "string"
+            },
+            "request_id": {
+              "type": "string"
+            },
+            "request_digest": {
+              "type": "string"
+            },
+            "valid_from_ns": {
+              "type": "integer"
+            },
+            "valid_until_ns": {
+              "type": "integer"
+            }
+          },
+          "additionalProperties": true
+        },
+        "attestations": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "verified": {
+                "type": "boolean"
+              },
+              "passed": {
+                "type": "boolean"
+              },
+              "server_id": {
+                "type": "string"
+              },
+              "evidence_ref": {
+                "type": "string"
+              },
+              "checked_at_ns": {
+                "type": "integer"
+              },
+              "valid_until_ns": {
+                "type": "integer"
+              }
+            },
+            "additionalProperties": true
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "phase": {
+      "enum": [
+        "request",
+        "response",
+        "activation",
+        "operation",
+        "retirement"
+      ]
+    }
+  },
+  "additionalProperties": true,
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "MCP PAC49 decision input",
+  "required": [
+    "phase",
+    "request",
+    "facts"
+  ]
+}
